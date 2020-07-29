@@ -1,3 +1,5 @@
+import { volumeInit } from './volume.js';
+
 export const videoPlayerInit = () => {
 
     const videoPlayer = document.querySelector('.video-player');
@@ -6,6 +8,11 @@ export const videoPlayerInit = () => {
     const videoTimePassed = document.querySelector('.video-time__passed');
     const videoProgress = document.querySelector('.video-progress');
     const videoTimeTotal = document.querySelector('.video-time__total');
+    const videoVolume = document.querySelector('.video-volume');
+    const videoFullScreen = document.querySelector('.video-fullscreen');
+    const videoVolumeDown = document.querySelector('#video-volume-down');
+    const videoVolumeUp = document.querySelector('#video-volume-up');
+    let latestVolume = 0.5;
 
     const toggleIcon = () => {
         if (videoPlayer.paused) {
@@ -53,10 +60,16 @@ export const videoPlayerInit = () => {
         videoTimeTotal.textContent = `${addZero(minutesTotal)}:${addZero(secondsTotal)}`;
     });
 
-    videoProgress.addEventListener('change', () => {
+    videoProgress.addEventListener('input', () => {
         const duration = videoPlayer.duration;
         const value = videoProgress.value;
 
         videoPlayer.currentTime = (value * duration) / 100; // for ex. 7.9 * 63 / 100 = 4.977 and running 'timeupdate' EL
     });
+
+    videoFullScreen.addEventListener('click', () => {
+        videoPlayer.requestFullscreen();
+    });
+
+    volumeInit(videoVolume, videoPlayer, videoVolumeDown, videoVolumeUp, latestVolume);
 };
