@@ -1,3 +1,4 @@
+import { timeProgressBar } from './timeProgressBar.js';
 import { volumeInit } from './volume.js';
 
 export const videoPlayerInit = () => {
@@ -13,6 +14,8 @@ export const videoPlayerInit = () => {
     const videoVolumeDown = document.querySelector('#video-volume-down');
     const videoVolumeUp = document.querySelector('#video-volume-up');
     let latestVolume = 0.5;
+
+    const audioProgressTiming = document.querySelector('.audio-progress__timing');
 
     const toggleIcon = () => {
         if (videoPlayer.paused) {
@@ -35,8 +38,6 @@ export const videoPlayerInit = () => {
         videoPlayer.currentTime = 0;
     };
 
-    const addZero = (num) => (num < 10) ? '0' + num : num;
-
     videoPlayer.addEventListener('click', togglePlay);
     videoButtonPlay.addEventListener('click', togglePlay);
     videoPlayer.addEventListener('play', toggleIcon);
@@ -44,21 +45,7 @@ export const videoPlayerInit = () => {
 
     videoButtonStop.addEventListener('click', stopPlay);
 
-    videoPlayer.addEventListener('timeupdate', () => {
-        const currentTime = videoPlayer.currentTime;
-        const duration = videoPlayer.duration;
-
-        videoProgress.value = (currentTime / duration) * 100; // for ex. 5 / 63 * 100 == 7,93% and input value = 7.9
-
-        let minutesPassed = Math.floor(currentTime / 60);
-        let secondsPassed = Math.floor(currentTime % 60);
-
-        let minutesTotal = Math.floor(duration / 60);
-        let secondsTotal = Math.floor(duration % 60);
-
-        videoTimePassed.textContent = `${addZero(minutesPassed)}:${addZero(secondsPassed)}`;
-        videoTimeTotal.textContent = `${addZero(minutesTotal)}:${addZero(secondsTotal)}`;
-    });
+    timeProgressBar(videoPlayer, videoProgress, videoTimePassed, videoTimeTotal);
 
     videoProgress.addEventListener('input', () => {
         const duration = videoPlayer.duration;
@@ -71,5 +58,5 @@ export const videoPlayerInit = () => {
         videoPlayer.requestFullscreen();
     });
 
-    volumeInit(videoVolume, videoPlayer, videoVolumeDown, videoVolumeUp, latestVolume);
+    volumeInit(videoVolume, videoPlayer, videoVolumeDown, videoVolumeUp, null);
 };
