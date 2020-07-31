@@ -1,7 +1,7 @@
 export const volumeInit = (volumeType, player, volumeDown, volumeUp, latestVolume) => {
     volumeType.addEventListener('input', () => {
         player.volume = volumeType.value / 100;
-        if (player.volume === 0) {
+        if (!player.volume) {
             volumeDown.classList.replace('fa-volume-down', 'fa-volume-off');
         } else {
             if (volumeDown.classList.contains('fa-volume-off')) {
