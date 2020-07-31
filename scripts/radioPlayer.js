@@ -31,6 +31,11 @@ export const radioPlayerInit = () => {
         elem.classList.add('select');
     };
 
+    radioPlayerInit.stop = () => {
+        audio.pause();
+        toggleIconPlay();
+    }
+
     radioNavigation.addEventListener('change', event => {
         const target = event.target;
         const parent = target.closest('.radio-item');

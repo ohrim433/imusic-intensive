@@ -1,5 +1,5 @@
-import { timeProgressBar } from './timeProgressBar.js';
-import { volumeInit } from './volume.js';
+import {timeProgressBar} from './timeProgressBar.js';
+import {volumeInit} from './volume.js';
 
 export const musicPlayerInit = () => {
     const audio = document.querySelector('.audio');
@@ -24,8 +24,8 @@ export const musicPlayerInit = () => {
         const isPlayed = audioPlayer.paused;
         const track = playlist[trackIndex];
 
-        audioPlayer.src = `./audio/${track}.mp3`;
-        audioImg.src = `./audio/${track}.jpg`;
+        audioPlayer.src = `audio/${track}.mp3`;
+        audioImg.src = `audio/${track}.jpg`;
         audioHeader.textContent = track.toUpperCase();
 
         if (isPlayed) {
@@ -33,6 +33,11 @@ export const musicPlayerInit = () => {
         } else {
             audioPlayer.play();
         }
+
+        audioPlayer.addEventListener('canplay', () => {
+            timeProgressBar(audioPlayer, audioProgress, audioTimePassed, audioTimeTotal, audioProgressTiming);
+        });
+
     };
 
     const nextTrack = () => {
@@ -45,12 +50,20 @@ export const musicPlayerInit = () => {
     };
 
     const prevTrack = () => {
-        if (trackIndex !== 0) {
+        if (trackIndex) {
             trackIndex--;
         } else {
             trackIndex = playlist.length - 1;
         }
         loadTrack();
+    };
+
+    musicPlayerInit.pause = () => {
+        if (!audioPlayer.paused) {
+            audioPlayer.pause();
+            audio.classList.remove('play');
+            audioButtonPlay.classList.replace('fa-pause', 'fa-play');
+        }
     };
 
     audioNavigation.addEventListener('click', event => {
@@ -85,7 +98,9 @@ export const musicPlayerInit = () => {
         audioPlayer.play();
     });
 
-    timeProgressBar(audioPlayer, audioProgress, audioTimePassed, audioTimeTotal, audioProgressTiming);
+    audioPlayer.addEventListener('timeupdate', () => {
+        timeProgressBar(audioPlayer, audioProgress, audioTimePassed, audioTimeTotal, audioProgressTiming);
+    });
 
     audioProgress.addEventListener('click', event => {
         const duration = audioPlayer.duration;
@@ -94,6 +109,7 @@ export const musicPlayerInit = () => {
         audioPlayer.currentTime = (x / allWidth) * duration;
     });
 
+    loadTrack();
     volumeInit(audioVolume, audioPlayer, audioVolumeDown, audioVolumeUp, latestVolume);
 
 }

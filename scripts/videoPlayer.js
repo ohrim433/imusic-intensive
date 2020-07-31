@@ -1,5 +1,5 @@
-import { timeProgressBar } from './timeProgressBar.js';
-import { volumeInit } from './volume.js';
+import {timeProgressBar} from './timeProgressBar.js';
+import {volumeInit} from './volume.js';
 
 export const videoPlayerInit = () => {
 
@@ -38,6 +38,13 @@ export const videoPlayerInit = () => {
         videoPlayer.currentTime = 0;
     };
 
+    videoPlayerInit.pause = () => {
+        if (!videoPlayer.paused) {
+            stopPlay();
+            toggleIcon();
+        }
+    };
+
     videoPlayer.addEventListener('click', togglePlay);
     videoButtonPlay.addEventListener('click', togglePlay);
     videoPlayer.addEventListener('play', toggleIcon);
@@ -45,7 +52,9 @@ export const videoPlayerInit = () => {
 
     videoButtonStop.addEventListener('click', stopPlay);
 
-    timeProgressBar(videoPlayer, videoProgress, videoTimePassed, videoTimeTotal);
+    videoPlayer.addEventListener('timeupdate', () => {
+        timeProgressBar(videoPlayer, videoProgress, videoTimePassed, videoTimeTotal);
+    });
 
     videoProgress.addEventListener('input', () => {
         const duration = videoPlayer.duration;
